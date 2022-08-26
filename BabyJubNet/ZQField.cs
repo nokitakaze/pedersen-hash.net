@@ -59,5 +59,10 @@ namespace BabyJubNet
 
             return res;
         }
+
+        public BigInteger Square(BigInteger value)
+        {
+            return (value * value) % q;
+        }
     }
 }

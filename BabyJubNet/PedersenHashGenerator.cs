@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Numerics;
+using System.Text;
 
 namespace BabyJubNet
 {
@@ -16,35 +20,82 @@ namespace BabyJubNet
             throw new NotImplementedException();
         }
 
-        private static readonly List<object> bases = new List<object>();
+        private static readonly List<(BigInteger A, BigInteger B)> bases = new List<(BigInteger A, BigInteger B)>();
 
-        public static object GetBasePoint(int pointIdx)
+        public static (BigInteger A, BigInteger B) GetBasePoint(int pointIdx)
         {
             if (pointIdx < bases.Count)
             {
                 return bases[pointIdx];
             }
 
-            throw new NotImplementedException();
+            (BigInteger a, BigInteger b)? p = null;
+            var tryIdx = 0;
+            while (p == null)
+            {
+                var S = string.Format("{0}_{1}_{2}",
+                    GENPOINT_PREFIX,
+                    pointIdx.ToString().PadLeft(32, '0'),
+                    tryIdx.ToString().PadLeft(32, '0')
+                );
+                var sByte = Encoding.ASCII.GetBytes(S);
+
+                using var hashAlgorithm = new Konscious.Security.Cryptography.HMACBlake2B(256);
+                hashAlgorithm.Initialize();
+                hashAlgorithm.ComputeHash(sByte);
+                var h = hashAlgorithm.Hash;
+
+                h[31] &= 0xBF; // Set 255th bit to 0 (256th is the signal and 254th is the last possible bit to 1)
+                p = BabyJub.UnpackPoint(h);
+                tryIdx++;
+            }
+
+            var p8 = BabyJub.MulPointEscalar(p.Value, 8);
+
+            if (!BabyJub.InSubgroup(p8))
+            {
+                throw new Exception("Point not in curve");
+            }
+
+            bases[pointIdx] = p8;
+            return p8;
         }
 
-        public static byte[] Buffer2bits(byte[] buff)
+        public static bool[] Buffer2bits(byte[] buff)
         {
-            var res = new byte[buff.Length * 8];
+            var res = new bool[buff.Length * 8];
             for (var i = 0; i < buff.Length; i++)
             {
                 var b = buff[i];
-                res[i * 8] = (byte)(b & 0x01);
-                res[i * 8 + 1] = (byte)(b & 0x02);
-                res[i * 8 + 2] = (byte)(b & 0x04);
-                res[i * 8 + 3] = (byte)(b & 0x08);
-                res[i * 8 + 4] = (byte)(b & 0x10);
-                res[i * 8 + 5] = (byte)(b & 0x20);
-                res[i * 8 + 6] = (byte)(b & 0x40);
-                res[i * 8 + 7] = (byte)(b & 0x80);
+                res[i * 8] = (b & 0x01) > 0;
+                res[i * 8 + 1] = (b & 0x02) > 0;
+                res[i * 8 + 2] = (b & 0x04) > 0;
+                res[i * 8 + 3] = (b & 0x08) > 0;
+                res[i * 8 + 4] = (b & 0x10) > 0;
+                res[i * 8 + 5] = (b & 0x20) > 0;
+                res[i * 8 + 6] = (b & 0x40) > 0;
+                res[i * 8 + 7] = (b & 0x80) > 0;
             }
 
             return res;
+        }
+
+        private static byte[] ParseHex(string hex)
+        {
+            if (hex.StartsWith("0x"))
+            {
+                hex = hex[2..];
+            }
+
+            if (hex.Length % 2 == 1)
+            {
+                hex = "0" + hex;
+            }
+
+            return Enumerable
+                .Range(0, hex.Length / 2)
+                .Select(i => byte.Parse(hex.Substring(i * 2, 2), NumberStyles.HexNumber))
+                .ToArray();
         }
     }
 }

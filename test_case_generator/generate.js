@@ -5,6 +5,8 @@ const circomlib = require('circomlib');
 const snarkjs = require("snarkjs");
 const bigInt = snarkjs.bigInt;
 const crypto = require("crypto");
+const F1Field = require("snarkjs/src/zqfield");
+const babyJub = require("circomlib/src/babyjub");
 
 const fs = require('fs');
 
@@ -56,6 +58,7 @@ console.log('commitment', deposit.commitment, '\nnullifier', deposit.nullifier, 
 
 {
     const numbers = [];
+    // todo 100
     for (let i = 0; i < 50; i++) {
         const number = Math.floor(Math.random() * 1_000_000_000);
         numbers.push(bigInt(number));
@@ -75,10 +78,67 @@ console.log('commitment', deposit.commitment, '\nnullifier', deposit.nullifier, 
     fs.writeFileSync('test-affine-inverse.tsv', InverseText);
 }
 
-const F1Field = require("./node_modules/snarkjs/src/zqfield.js");
-// const F2Field = require("./node_modules/snarkjs/src/f2field.js");
-// const F3Field = require("./node_modules/snarkjs/src/f3field.js");
-// const GCurve = require("./node_modules/snarkjs/src/gcurve.js");
+{
+    let PointAddText = '';
+    // todo 10_000
+    for (let i = 0; i < 100; i++) {
+        const num1a = bigInt(Math.floor(Math.random() * 100_000));
+        const num1b = bigInt(Math.floor(Math.random() * 100_000));
+
+        const num2a = bigInt(Math.floor(Math.random() * 100_000));
+        const num2b = bigInt(Math.floor(Math.random() * 100_000));
+
+        const point1 = [num1a, num1b];
+        const point2 = [num2a, num2b];
+
+        const point3 = babyJub.addPoint(point1, point2);
+
+        const s = `${num1a}\t${num1b}\t${num2a}\t${num2b}\t${point3[0]}\t${point3[1]}`;
+        PointAddText += s + '\n';
+    }
+
+    fs.writeFileSync('test-add-point.tsv', PointAddText);
+}
+
+{
+    let MulPointEscalarText = '';
+    // todo 10_000
+    for (let i = 0; i < 100; i++) {
+        const num1 = bigInt(Math.floor(Math.random() * 100_000));
+        const num2 = bigInt(Math.floor(Math.random() * 100_000));
+        const num3 = Math.floor(Math.random() * 100_000);
+
+        const accP = [num1, num2];
+
+        const point2 = babyJub.mulPointEscalar(accP, num3);
+
+        const s = `${num1}\t${num2}\t${num3}\t${point2[0]}\t${point2[1]}`;
+        MulPointEscalarText += s + '\n';
+    }
+
+    fs.writeFileSync('test-mul-escalar.tsv', MulPointEscalarText);
+}
+
+{
+    let DepositText = '';
+    // todo 50_000
+    for (let i = 0; i < 1000; i++) {
+        const nullifier = rbigint(31);
+        const secret = rbigint(31);
+
+        const preimage = Buffer.concat([nullifier.leInt2Buff(31), secret.leInt2Buff(31)]);
+
+        const packedPoint = circomlib.pedersenHash.hash(preimage);
+        const unpacked = circomlib.babyJub.unpackPoint(packedPoint);
+
+        const preimageHex = toHex(preimage, preimage.length);
+        const packedPointHex = toHex(packedPoint, packedPoint.length);
+        const s = `${preimageHex}\t${packedPointHex}\t${unpacked[0]}\t${unpacked[1]}`;
+        DepositText += s + '\n';
+    }
+
+    fs.writeFileSync('test-pedersen-hash.tsv', DepositText);
+}
 
 async function readPrimaries() {
     const contents = await fs.promises.readFile('prime.txt', 'utf-8');
@@ -97,7 +157,6 @@ readPrimaries().then(async primaries => {
 
         // twoinv nqr t nqr_to_t
         const s = `${primary}\t${f1.twoinv}\t${f1.nqr}\t${f1.t}\t${f1.nqr_to_t}`;
-        // console.log(s);
         F1FieldText += s + '\n';
     }
 
@@ -135,5 +194,5 @@ readPrimaries().then(async primaries => {
     }
     await fs.promises.writeFile('test-f2.tsv', F2FieldText);
     */
-})
+});
 

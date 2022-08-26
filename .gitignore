@@ -8,4 +8,7 @@ obj/
 /test_case_generator/node_modules
 /test_case_generator/test-f1.tsv
 /test_case_generator/test-affine-inverse.tsv
-
+/test_case_generator/test-mul-escalar.tsv
+/test_case_generator/test-add-point.tsv
+/test_case_generator/test-pedersen-hash.tsv
+/test_case_generator/test-deposit.tsv
