@@ -1,8 +1,11 @@
 /.idea
+/*.DotSettings.user
+
+bin/
+obj/
 
 /test_case_generator/.idea
 /test_case_generator/node_modules
 /test_case_generator/test-f1.tsv
+/test_case_generator/test-affine-inverse.tsv
 
-bin/
-obj/

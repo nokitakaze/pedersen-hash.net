@@ -54,6 +54,27 @@ const deposit = createDeposit({
 console.log('commitment', deposit.commitment, '\nnullifier', deposit.nullifier, '\nsecret', deposit.secret);
 */
 
+{
+    const numbers = [];
+    for (let i = 0; i < 50; i++) {
+        const number = Math.floor(Math.random() * 1_000_000_000);
+        numbers.push(bigInt(number));
+    }
+
+    let InverseText = '';
+    for (let num1 of numbers) {
+        for (let num2 of numbers) {
+            const affine = num1.affine(num2);
+            const inverse = num1.inverse(num2);
+
+            const s = `${num1}\t${num2}\t${affine}\t${inverse}`;
+            InverseText += s + '\n';
+        }
+    }
+
+    fs.writeFileSync('test-affine-inverse.tsv', InverseText);
+}
+
 const F1Field = require("./node_modules/snarkjs/src/zqfield.js");
 // const F2Field = require("./node_modules/snarkjs/src/f2field.js");
 // const F3Field = require("./node_modules/snarkjs/src/f3field.js");
@@ -68,7 +89,7 @@ readPrimaries().then(async primaries => {
     // console.log(primaries);
 
     let F1FieldText = '';
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 1000; i++) {
         const id = Math.floor(Math.random() * primaries.length);
         const primary = primaries[id];
         const bigNumber = bigInt(primary);
