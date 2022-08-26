@@ -1,0 +1,8 @@
+/.idea
+
+/test_case_generator/.idea
+/test_case_generator/node_modules
+/test_case_generator/test-f1.tsv
+
+bin/
+obj/
