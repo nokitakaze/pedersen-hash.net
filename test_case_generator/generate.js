@@ -132,7 +132,8 @@ function padLeftZeros(idx, n) {
             throw new Error("Can't repack point");
         }
 
-        const s = `${pointIdx}\t${S}\t${hHex}\t${p[0]}\t${p[1]}`;
+        const basePoint = circomlib.pedersenHash.getBasePoint(pointIdx);
+        const s = `${pointIdx}\t${S}\t${hHex}\t${p[0]}\t${p[1]}\t${basePoint[0]}\t${basePoint[1]}`;
         PackUnpackText += s + '\n';
     }
 

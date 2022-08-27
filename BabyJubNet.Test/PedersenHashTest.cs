@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text;
+using BlakeSharp;
 using Xunit;
 
 namespace BabyJubNet.Test
@@ -12,6 +13,7 @@ namespace BabyJubNet.Test
     {
         private const int CaseChunkSize = 100;
         private static readonly object[][] Cases;
+        private static readonly object[][] PackUnpackCases;
 
         static PedersenHashTest()
         {
@@ -36,9 +38,25 @@ namespace BabyJubNet.Test
                     };
                 })
                 .ToArray();
+
+            lines = File.ReadAllLines("data/test-pack-unpack.tsv");
+            PackUnpackCases = lines
+                .Select(line =>
+                {
+                    var a = line.Split();
+                    var num = int.Parse(a[0]);
+
+                    return new object[]
+                    {
+                        num,
+                        BigInteger.Parse(a[5]),
+                        BigInteger.Parse(a[6])
+                    };
+                })
+                .ToArray();
         }
 
-        #region Mul Point Escalar
+        #region Pedersen hash
 
         public static IEnumerable<object[]> GetPedersenTestCases()
         {
@@ -72,20 +90,36 @@ namespace BabyJubNet.Test
 
         #endregion
 
-        [Fact]
-        public void GetBasePointTest()
+        #region Pack Unpack
+
+        public static IEnumerable<object[]> GetGetBasePointTestCases()
         {
-            for (var i = 0; i < 10; i++)
+            return Enumerable
+                .Range(0, (int)Math.Ceiling(PackUnpackCases.Length * (1d / CaseChunkSize)))
+                .Select(chunkId => new object[] { chunkId })
+                .ToArray();
+        }
+
+        [Theory]
+        [MemberData(nameof(GetGetBasePointTestCases))]
+        public void GetBasePointTestCase(int chunkId)
+        {
+            var cases = PackUnpackCases
+                .Skip(chunkId * CaseChunkSize)
+                .Take(CaseChunkSize)
+                .ToArray();
+            foreach (var caseData in cases)
             {
-                var point = PedersenHashGenerator.GetBasePoint(i);
-                var packed = BabyJub.PackPoint(point);
-                var pointRestored = BabyJub.UnpackPoint(packed);
+                var tryIdx = (int)caseData[0];
+                var pointA = (BigInteger)caseData[1];
+                var pointB = (BigInteger)caseData[2];
 
-                Assert.True(pointRestored != null);
-
-                Assert.Equal(point.A, pointRestored.Value.A);
-                Assert.Equal(point.B, pointRestored.Value.B);
+                var pointActual = PedersenHashGenerator.GetBasePoint(tryIdx);
+                Assert.Equal(pointA, pointActual.A);
+                Assert.Equal(pointB, pointActual.B);
             }
         }
+
+        #endregion
     }
 }

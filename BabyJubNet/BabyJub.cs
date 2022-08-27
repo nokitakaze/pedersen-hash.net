@@ -70,20 +70,22 @@ namespace BabyJubNet
             return buff;
         }
 
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Global
         public static (BigInteger A, BigInteger B)? UnpackPoint(byte[] _buff)
         {
             var F = BN128.Fr;
 
             var buff = _buff.ToArray();
             var sign = false;
-            var P = (A : BigInteger.Zero, B : BigInteger.Zero);
-            if ((buff[31] & 0x80) > 0) {
+            var P = (A: BigInteger.Zero, B: BigInteger.Zero);
+            if ((buff[31] & 0x80) > 0)
+            {
                 sign = true;
-                buff[31] = (byte) (buff[31] & 0x7F);
+                buff[31] = (byte)(buff[31] & 0x7F);
             }
 
-            P.B =  new BigInteger(buff, true, false);
-            
+            P.B = new BigInteger(buff, true, false);
+
             if (P.B >= p)
             {
                 return null;
@@ -129,10 +131,17 @@ namespace BabyJubNet
             var x2 = F.Square(P.A);
             var y2 = F.Square(P.B);
 
-            var value1 = (CTA * x2) + y2;
-            var value2 = BigInteger.One + ((x2 * y2) * D);
+            var value1_a = (CTA * x2) % F.q;
+            var value1 = value1_a + y2;
 
-            return value1 == value2;
+            var value2_a = (x2 * y2) % F.q;
+            var value2 = (value2_a * D) % F.q;
+            value2 += BigInteger.One;
+
+            var value1_affine = value1.Affine(F.q);
+            var value2_affine = value2.Affine(F.q);
+
+            return value1_affine == value2_affine;
         }
     }
 }

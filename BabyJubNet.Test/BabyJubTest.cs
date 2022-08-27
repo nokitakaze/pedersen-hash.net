@@ -193,15 +193,21 @@ namespace BabyJubNet.Test
                     }
                 }
 
-                var actualPoint = BabyJub.UnpackPoint(h);
-                Assert.NotNull(actualPoint);
+                var actualUnpacked = BabyJub.UnpackPoint(h);
+                Assert.NotNull(actualUnpacked);
 
-                Assert.Equal(pA, actualPoint.Value.A);
-                Assert.Equal(pB, actualPoint.Value.B);
+                Assert.Equal(pA, actualUnpacked.Value.A);
+                Assert.Equal(pB, actualUnpacked.Value.B);
 
                 var actualPacked = BabyJub.PackPoint((pA, pB));
                 var actualPacked_hex = string.Concat(actualPacked.Select(t => t.ToString("x2")));
                 Assert.Equal(h_hex, actualPacked_hex);
+
+                // hint: This may seem like a redundant test.
+                // But this is a test in case the problem is in the data of the test cases themselves.
+                var repacked = BabyJub.PackPoint((actualUnpacked.Value.A, actualUnpacked.Value.B));
+                var repacked_hex = string.Concat(repacked.Select(t => t.ToString("x2")));
+                Assert.Equal(h_hex, repacked_hex);
             }
         }
 

@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using BlakeSharp;
 
 namespace BabyJubNet
 {
@@ -21,11 +20,12 @@ namespace BabyJubNet
             throw new NotImplementedException();
         }
 
-        private static readonly List<(BigInteger A, BigInteger B)> bases = new List<(BigInteger A, BigInteger B)>();
+        private static readonly Dictionary<int, (BigInteger A, BigInteger B)> bases =
+            new Dictionary<int, (BigInteger A, BigInteger B)>();
 
         public static (BigInteger A, BigInteger B) GetBasePoint(int pointIdx)
         {
-            if (pointIdx < bases.Count)
+            if (bases.ContainsKey(pointIdx))
             {
                 return bases[pointIdx];
             }
@@ -41,7 +41,7 @@ namespace BabyJubNet
                 );
                 var sByte = Encoding.ASCII.GetBytes(S);
 
-                using var hashAlgorithm = new Blake256();
+                using var hashAlgorithm = new BlakeSharp.Blake256();
                 hashAlgorithm.Initialize();
                 hashAlgorithm.ComputeHash(sByte);
                 var h = hashAlgorithm.Hash;
@@ -52,10 +52,11 @@ namespace BabyJubNet
             }
 
             var p8 = BabyJub.MulPointEscalar(p.Value, 8);
+            Console.WriteLine("{0}\t\t{1}", p8.A, p8.B);
 
             if (!BabyJub.InSubgroup(p8))
             {
-                throw new Exception("Point not in curve");
+                throw new BabyJubNetException("Point not in curve");
             }
 
             bases[pointIdx] = p8;
