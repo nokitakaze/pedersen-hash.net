@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Text;
-using BlakeSharp;
 using Xunit;
 
 namespace BabyJubNet.Test
@@ -82,9 +80,14 @@ namespace BabyJubNet.Test
                 var expectedUnpacked1 = (BigInteger)caseData[2];
                 var expectedUnpacked2 = (BigInteger)caseData[3];
 
-                var obj = PedersenHashGenerator.PedersenHash(input);
+                var packedHash = PedersenHashGenerator.PedersenHash(input);
+                var packedHash_hex = string.Concat(packedHash.Select(t => t.ToString("x2")));
+                Assert.Equal(expectedPacked, packedHash_hex);
 
-                throw new NotImplementedException();
+                var actualUnpacked = BabyJub.UnpackPoint(packedHash);
+                Assert.NotNull(actualUnpacked);
+                Assert.Equal(expectedUnpacked1, actualUnpacked.Value.A);
+                Assert.Equal(expectedUnpacked2, actualUnpacked.Value.B);
             }
         }
 

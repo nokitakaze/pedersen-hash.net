@@ -13,11 +13,69 @@ namespace BabyJubNet
         private const int windowSize = 4;
         private const int nWindowsPerSegment = 50;
 
-        public static object PedersenHash(byte[] msg)
+        // ReSharper disable once ReturnTypeCanBeEnumerable.Global
+        public static byte[] PedersenHash(byte[] msg)
         {
             const int bitsPerSegment = windowSize * nWindowsPerSegment;
+            var bits = Buffer2bits(msg);
 
-            throw new NotImplementedException();
+            var nSegments = (int)Math.Floor((bits.Length - 1) * 1d / (windowSize * nWindowsPerSegment)) + 1;
+
+            var accP = (BigInteger.Zero, BigInteger.One);
+
+            for (var s = 0; s < nSegments; s++)
+            {
+                int nWindows;
+                if (s == nSegments - 1)
+                {
+                    nWindows =
+                        (int)Math.Floor(((bits.Length - (nSegments - 1) * bitsPerSegment * 1d) - 1) / windowSize) + 1;
+                }
+                else
+                {
+                    nWindows = nWindowsPerSegment;
+                }
+
+                var escalar = BigInteger.Zero;
+                var exp = BigInteger.One;
+                for (var w = 0; w < nWindows; w++)
+                {
+                    var o = s * bitsPerSegment + w * windowSize;
+                    var acc = BigInteger.One;
+                    for (var b = 0; ((b < windowSize - 1) && (o < bits.Length)); b++)
+                    {
+                        if (bits[o])
+                        {
+                            acc += BigInteger.One << b;
+                        }
+
+                        o++;
+                    }
+
+                    if (o < bits.Length)
+                    {
+                        if (bits[o])
+                        {
+                            acc = -acc;
+                        }
+
+                        // ReSharper disable once RedundantAssignment
+                        o++;
+                    }
+
+                    escalar += acc * exp;
+                    exp <<= (windowSize + 1);
+                }
+
+                if (escalar < BigInteger.Zero)
+                {
+                    escalar += BabyJub.subOrder;
+                }
+
+                accP = BabyJub.AddPoint(accP, BabyJub.MulPointEscalar(GetBasePoint(s), escalar));
+            }
+
+            return BabyJub.PackPoint(accP);
         }
 
         private static readonly Dictionary<int, (BigInteger A, BigInteger B)> bases =
