@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using BlakeSharp;
 
 namespace BabyJubNet
 {
@@ -40,7 +41,7 @@ namespace BabyJubNet
                 );
                 var sByte = Encoding.ASCII.GetBytes(S);
 
-                using var hashAlgorithm = new Konscious.Security.Cryptography.HMACBlake2B(256);
+                using var hashAlgorithm = new Blake256();
                 hashAlgorithm.Initialize();
                 hashAlgorithm.ComputeHash(sByte);
                 var h = hashAlgorithm.Hash;

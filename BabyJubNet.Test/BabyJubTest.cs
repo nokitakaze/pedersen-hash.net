@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using BlakeSharp;
 using Xunit;
 
 namespace BabyJubNet.Test
@@ -176,7 +177,7 @@ namespace BabyJubNet.Test
                     );
                     var sByte = Encoding.ASCII.GetBytes(S);
 
-                    using var hashAlgorithm = new Konscious.Security.Cryptography.HMACBlake2B(256);
+                    using var hashAlgorithm = new Blake256();
                     hashAlgorithm.Initialize();
                     hashAlgorithm.ComputeHash(sByte);
                     var h1 = hashAlgorithm.Hash;
