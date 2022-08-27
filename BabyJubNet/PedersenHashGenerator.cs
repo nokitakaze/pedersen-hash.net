@@ -80,7 +80,7 @@ namespace BabyJubNet
             return res;
         }
 
-        private static byte[] ParseHex(string hex)
+        public static byte[] ParseHex(string hex)
         {
             if (hex.StartsWith("0x"))
             {

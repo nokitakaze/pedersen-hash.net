@@ -39,6 +39,9 @@
       <None Update="data\test-pedersen-hash.tsv">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="data\test-pack-unpack.tsv">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

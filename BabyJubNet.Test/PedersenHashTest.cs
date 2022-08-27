@@ -20,7 +20,7 @@ namespace BabyJubNet.Test
                 .Select(line =>
                 {
                     var a = line.Split();
-                    var input = ParseHex(a[0]);
+                    var input = PedersenHashGenerator.ParseHex(a[0]);
 
                     if (a[1].StartsWith("0x"))
                     {
@@ -35,19 +35,6 @@ namespace BabyJubNet.Test
                         BigInteger.Parse(a[3])
                     };
                 })
-                .ToArray();
-        }
-
-        private static byte[] ParseHex(string hex)
-        {
-            if (hex.StartsWith("0x"))
-            {
-                hex = hex[2..];
-            }
-
-            return Enumerable
-                .Range(0, hex.Length / 2)
-                .Select(i => byte.Parse(hex.Substring(i * 2, 2), NumberStyles.HexNumber))
                 .ToArray();
         }
 
@@ -93,6 +80,11 @@ namespace BabyJubNet.Test
                 var point = PedersenHashGenerator.GetBasePoint(i);
                 var packed = BabyJub.PackPoint(point);
                 var pointRestored = BabyJub.UnpackPoint(packed);
+
+                Assert.True(pointRestored != null);
+
+                Assert.Equal(point.A, pointRestored.Value.A);
+                Assert.Equal(point.B, pointRestored.Value.B);
             }
         }
     }

@@ -7,6 +7,7 @@ const bigInt = snarkjs.bigInt;
 const crypto = require("crypto");
 const F1Field = require("snarkjs/src/zqfield");
 const babyJub = require("circomlib/src/babyjub");
+const createBlakeHash = require("blake-hash");
 
 const fs = require('fs');
 
@@ -25,6 +26,7 @@ const rbigint = (nbytes) => snarkjs.bigInt.leBuff2int(crypto.randomBytes(nbytes)
 /**
  * Create deposit object from secret and nullifier
  */
+
 /*
 function createDeposit({nullifier, secret}) {
     const deposit = {nullifier, secret};
@@ -55,6 +57,14 @@ const deposit = createDeposit({
 
 console.log('commitment', deposit.commitment, '\nnullifier', deposit.nullifier, '\nsecret', deposit.secret);
 */
+
+function padLeftZeros(idx, n) {
+    let sidx = "" + idx;
+    while (sidx.length < n) {
+        sidx = "0" + sidx;
+    }
+    return sidx;
+}
 
 {
     const numbers = [];
@@ -98,6 +108,36 @@ console.log('commitment', deposit.commitment, '\nnullifier', deposit.nullifier, 
     }
 
     fs.writeFileSync('test-add-point.tsv', PointAddText);
+}
+
+{
+    const GENPOINT_PREFIX = "PedersenGenerator";
+    let PackUnpackText = '';
+    for (let pointIdx = 0; pointIdx < 100; pointIdx++) {
+        let p = null;
+        let h = null;
+        let S = '';
+        for (let tryIdx = 0; p == null; tryIdx++) {
+            S = GENPOINT_PREFIX + "_" + padLeftZeros(pointIdx, 32) + "_" + padLeftZeros(tryIdx, 32);
+            h = createBlakeHash("blake256").update(S).digest();
+            h[31] = h[31] & 0xBF;  // Set 255th bit to 0 (256th is the signal and 254th is the last possible bit to 1)
+            p = babyJub.unpackPoint(h);
+        }
+
+        const repack = babyJub.packPoint(p);
+
+        const hHex = toHex(h, h.length);
+        const repackHex = toHex(repack, repack.length);
+        if (hHex !== repackHex) {
+            throw new Error("Can't repack point");
+        }
+
+        const s = `${pointIdx}\t${S}\t${hHex}\t${p[0]}\t${p[1]}`;
+        PackUnpackText += s + '\n';
+    }
+
+    fs.writeFileSync('test-pack-unpack.tsv', PackUnpackText);
+
 }
 
 {

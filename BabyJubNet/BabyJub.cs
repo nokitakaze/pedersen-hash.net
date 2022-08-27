@@ -70,9 +70,45 @@ namespace BabyJubNet
             return buff;
         }
 
-        public static (BigInteger A, BigInteger B) UnpackPoint(byte[] _buff)
+        public static (BigInteger A, BigInteger B)? UnpackPoint(byte[] _buff)
         {
-            throw new NotImplementedException();
+            var F = BN128.Fr;
+
+            var buff = _buff.ToArray();
+            var sign = false;
+            var P = (A : BigInteger.Zero, B : BigInteger.Zero);
+            if ((buff[31] & 0x80) > 0) {
+                sign = true;
+                buff[31] = (byte) (buff[31] & 0x7F);
+            }
+
+            P.B =  new BigInteger(buff, true, false);
+            
+            if (P.B >= p)
+            {
+                return null;
+            }
+
+            var y2 = F.Square(P.B);
+
+            var x_prev1 = BigInteger.One - y2;
+            var x_prev2 = CTA - ((D * y2) % F.q);
+            var x_prev3 = (x_prev1 * x_prev2.Inverse(F.q)) % F.q;
+            var x = F.Sqrt(x_prev3);
+
+            if (x == null)
+            {
+                return null;
+            }
+
+            if (sign)
+            {
+                x = -x;
+            }
+
+            P.A = x.Value.Affine(F.q);
+
+            return P;
         }
 
         public static bool InSubgroup((BigInteger A, BigInteger B) P)
