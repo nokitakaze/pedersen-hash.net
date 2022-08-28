@@ -72,7 +72,7 @@ namespace PedersenHashNet.Test
             var q = Enumerable
                 .Range(0, (int)Math.Ceiling(EscalarCases.Length * (1d / CaseChunkSize)))
                 .Select(chunkId => new object[] { chunkId });
-            if (Util.NeedShortTest())
+            if (Util.IsOpenCoverOrShort())
             {
                 q = q.Take(5);
             }
@@ -114,7 +114,7 @@ namespace PedersenHashNet.Test
                 .Range(0, (int)Math.Ceiling(AddPointCases.Length * (1d / CaseChunkSize)))
                 .Select(chunkId => new object[] { chunkId });
 
-            if (Util.NeedShortTest())
+            if (Util.IsOpenCoverOrShort())
             {
                 q = q.Take(5);
             }

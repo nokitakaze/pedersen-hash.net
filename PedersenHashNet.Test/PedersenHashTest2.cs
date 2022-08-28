@@ -38,7 +38,7 @@ namespace PedersenHashNet.Test
                 .Range(0, (int)Math.Ceiling(TornadoCommitments.Length * (1d / CaseChunkSize)))
                 .Select(chunkId => new object[] { chunkId });
 
-            if (Util.NeedShortTest())
+            if (Util.IsOpenCoverOrShort())
             {
                 q = q.Take(1);
             }
@@ -163,7 +163,7 @@ namespace PedersenHashNet.Test
         [Fact]
         public void TestGenerateCommitmentPair()
         {
-            var maxCount = Util.NeedShortTest() ? 10 : 100;
+            var maxCount = Util.IsOpenCoverOrShort() ? 10 : 100;
             for (var i = 0; i < maxCount; i++)
             {
                 var (secretKey, publicKey) = PedersenHashGenerator.GenerateCommitmentPair();

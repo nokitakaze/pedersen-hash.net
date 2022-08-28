@@ -62,7 +62,7 @@ namespace PedersenHashNet.Test
                 .Range(0, (int)Math.Ceiling(Cases.Length * (1d / CaseChunkSize)))
                 .Select(chunkId => new object[] { chunkId });
 
-            if (Util.NeedShortTest())
+            if (Util.IsOpenCoverOrShort())
             {
                 q = q.Take(1);
             }
