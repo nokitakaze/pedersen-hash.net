@@ -54,14 +54,29 @@ namespace BabyJubNet.Test
                 .ToArray();
         }
 
+        public static bool NeedShortTest()
+        {
+            return Environment
+                .GetCommandLineArgs()
+                .Skip(1)
+                .Any(x => x.ToLowerInvariant() == "--short-test");
+        }
+
         #region Pedersen hash
 
         public static IEnumerable<object[]> GetPedersenTestCases()
         {
-            return Enumerable
+            var q = Enumerable
                 .Range(0, (int)Math.Ceiling(Cases.Length * (1d / CaseChunkSize)))
                 .Select(chunkId => new object[] { chunkId })
-                .ToArray();
+                .Take(5); // todo delme
+
+            if (NeedShortTest())
+            {
+                q = q.Take(5);
+            }
+
+            return q.ToArray();
         }
 
         [Theory]

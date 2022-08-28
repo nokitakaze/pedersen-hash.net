@@ -4,9 +4,16 @@ namespace BabyJubNet
 {
     public static class BN128
     {
+        // ReSharper disable once NotAccessedField.Global
         public static readonly BigInteger q;
+
+        // ReSharper disable once NotAccessedField.Global
         public static readonly BigInteger r;
+
+        // ReSharper disable once NotAccessedField.Global
         public static readonly ZQField F1;
+
+        // ReSharper disable once NotAccessedField.Global
         public static readonly ZQField Fr;
 
         static BN128()

@@ -11,9 +11,6 @@ const createBlakeHash = require("blake-hash");
 
 const fs = require('fs');
 
-/** Compute pedersen hash */
-const pedersenHash = (data) => circomlib.babyJub.unpackPoint(circomlib.pedersenHash.hash(data))[0];
-
 /** BigNumber to hex string of specified length */
 function toHex(number, length = 32) {
     const str = number instanceof Buffer ? number.toString('hex') : bigInt(number).toString(16);
@@ -22,41 +19,6 @@ function toHex(number, length = 32) {
 
 /** Generate random number of specified byte length */
 const rbigint = (nbytes) => snarkjs.bigInt.leBuff2int(crypto.randomBytes(nbytes));
-
-/**
- * Create deposit object from secret and nullifier
- */
-
-/*
-function createDeposit({nullifier, secret}) {
-    const deposit = {nullifier, secret};
-    deposit.preimage = Buffer.concat([deposit.nullifier.leInt2Buff(31), deposit.secret.leInt2Buff(31)]);
-
-    const packedPoint = circomlib.pedersenHash.hash(deposit.preimage);
-    const unpacked = circomlib.babyJub.unpackPoint(packedPoint);
-    console.log('packedPoint', packedPoint);
-    console.log('unpacked', unpacked);
-
-    deposit.commitment = pedersenHash(deposit.preimage);
-    if (deposit.commitment !== unpacked[0]) {
-        console.error('commitment ', deposit.commitment, ' != unpacked ', unpacked[0]);
-        throw new Error();
-    }
-
-    deposit.commitmentHex = toHex(deposit.commitment);
-    deposit.nullifierHash = pedersenHash(deposit.nullifier.leInt2Buff(31));
-    deposit.nullifierHex = toHex(deposit.nullifierHash);
-    return deposit;
-}
-
-const deposit = createDeposit({
-    nullifier: rbigint(31),
-    secret: rbigint(31)
-});
-
-
-console.log('commitment', deposit.commitment, '\nnullifier', deposit.nullifier, '\nsecret', deposit.secret);
-*/
 
 function padLeftZeros(idx, n) {
     let sidx = "" + idx;
@@ -68,8 +30,7 @@ function padLeftZeros(idx, n) {
 
 {
     const numbers = [];
-    // todo 100
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
         const number = Math.floor(Math.random() * 1_000_000_000);
         numbers.push(bigInt(number));
     }
@@ -90,8 +51,11 @@ function padLeftZeros(idx, n) {
 
 {
     let PointAddText = '';
-    // todo 10_000
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10_000; i++) {
+        if (i % 1000 === 999) {
+            console.debug('generate add point', i);
+        }
+
         const num1a = bigInt(Math.floor(Math.random() * 100_000));
         const num1b = bigInt(Math.floor(Math.random() * 100_000));
 
@@ -119,6 +83,7 @@ function padLeftZeros(idx, n) {
         let S = '';
         for (let tryIdx = 0; p == null; tryIdx++) {
             S = GENPOINT_PREFIX + "_" + padLeftZeros(pointIdx, 32) + "_" + padLeftZeros(tryIdx, 32);
+            // noinspection JSCheckFunctionSignatures
             h = createBlakeHash("blake256").update(S).digest();
             h[31] = h[31] & 0xBF;  // Set 255th bit to 0 (256th is the signal and 254th is the last possible bit to 1)
             p = babyJub.unpackPoint(h);
@@ -143,8 +108,11 @@ function padLeftZeros(idx, n) {
 
 {
     let MulPointEscalarText = '';
-    // todo 10_000
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 10_000; i++) {
+        if (i % 1000 === 999) {
+            console.debug('generate escalar tests', i);
+        }
+
         const num1 = bigInt(Math.floor(Math.random() * 100_000));
         const num2 = bigInt(Math.floor(Math.random() * 100_000));
         const num3 = Math.floor(Math.random() * 100_000);
@@ -162,8 +130,11 @@ function padLeftZeros(idx, n) {
 
 {
     let DepositText = '';
-    // todo 50_000
-    for (let i = 0; i < 1000; i++) {
+    for (let i = 0; i < 50_000; i++) {
+        if (i % 1000 === 999) {
+            console.debug('generate main test: pedersen hash', i);
+        }
+
         const nullifier = rbigint(31);
         const secret = rbigint(31);
 
@@ -187,53 +158,21 @@ async function readPrimaries() {
 }
 
 readPrimaries().then(async primaries => {
-    // console.log(primaries);
-
     let F1FieldText = '';
     for (let i = 0; i < 1000; i++) {
+        if (i % 100 === 99) {
+            console.debug('generate f1 fields', i);
+        }
+
         const id = Math.floor(Math.random() * primaries.length);
         const primary = primaries[id];
         const bigNumber = bigInt(primary);
         const f1 = new F1Field(bigNumber);
 
-        // twoinv nqr t nqr_to_t
         const s = `${primary}\t${f1.twoinv}\t${f1.nqr}\t${f1.t}\t${f1.nqr_to_t}`;
         F1FieldText += s + '\n';
     }
 
     // save test data to file
     await fs.promises.writeFile('test-f1.tsv', F1FieldText);
-
-    /*
-    const nonResidueF2 = bigInt("21888242871839275222246405745257275088696311157297823662689037894645226208582");
-    const nonResidueF6 = [ bigInt("9"), bigInt("1") ];
-
-    let F2FieldText = '';
-    for (let i = 0; i < 10; i++) {
-        // number #1
-        const id1 = Math.floor(Math.random() * primaries.length);
-        const primary1 = primaries[id1];
-
-        const big1 = bigInt(primary1);
-        const f1 = new F1Field(big1);
-        const f2a = new F2Field(f1, nonResidueF2);
-
-        // number #2
-        const id2 = Math.floor(Math.random() * primaries.length);
-        const primary2 = primaries[id2];
-
-        const big2 = bigInt(primary2);
-        const f2 = new F1Field(big2);
-        const f2b = new F2Field(f2, nonResidueF2);
-
-        //
-        const f2c = f2a.add(f2b);
-
-        // twoinv nqr t nqr_to_t
-        const s = `${primary1}\t${f1.twoinv}\t${f1.nqr}\t${f1.t}\t${f1.nqr_to_t}`;
-        F2FieldText += s + '\n';
-    }
-    await fs.promises.writeFile('test-f2.tsv', F2FieldText);
-    */
 });
-

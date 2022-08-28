@@ -39,7 +39,6 @@ namespace BabyJubNet.Test
             foreach (var caseData in cases)
             {
                 var q = caseData[0];
-                // var twoinv = caseData[1];
                 var nqr = caseData[2];
                 var t = caseData[3];
                 var nqr_to_t = caseData[4];
@@ -49,6 +48,14 @@ namespace BabyJubNet.Test
                 Assert.Equal(t, field.t);
                 Assert.Equal(nqr_to_t, field.nqr_to_t);
             }
+        }
+
+        [Fact]
+        public void SqrtZero()
+        {
+            var sqrt = BN128.F1.Sqrt(BigInteger.Zero);
+            Assert.NotNull(sqrt);
+            Assert.True(sqrt.Value.IsZero);
         }
     }
 }

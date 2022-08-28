@@ -13,6 +13,53 @@ namespace BabyJubNet
         private const int windowSize = 4;
         private const int nWindowsPerSegment = 50;
 
+        #region Tornado commitments
+
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Local
+        private static string ToCommitmentHexWithPrefix(byte[] rawValue, int byteLength = 32)
+        {
+            var s = string.Concat(rawValue.Select(t => t.ToString("x2")));
+            s = s.PadLeft(byteLength * 2, '0');
+
+            return "0x" + s;
+        }
+
+        public static string GetHexCommitmentFromPrivatePair(string hex)
+        {
+            return ToCommitmentHexWithPrefix(GetCommitmentFromPrivatePair(hex), 32);
+        }
+
+        public static string GetHexCommitmentFromPrivatePair(byte[] bytes)
+        {
+            return ToCommitmentHexWithPrefix(GetCommitmentFromPrivatePair(bytes), 32);
+        }
+
+        // ReSharper disable once ReturnTypeCanBeEnumerable.Global
+        public static byte[] GetCommitmentFromPrivatePair(string hex)
+        {
+            var bytes = ParseHex(hex);
+            if (bytes.Length != 31 * 2)
+            {
+                throw new BabyJubNetException($"Private pair hex has malformed length {bytes.Length} bytes", 2);
+            }
+
+            return GetCommitmentFromPrivatePair(bytes);
+        }
+
+        public static byte[] GetCommitmentFromPrivatePair(byte[] bytes)
+        {
+            if (bytes.Length != 31 * 2)
+            {
+                throw new BabyJubNetException($"Private pair hex has malformed length {bytes.Length} bytes", 3);
+            }
+
+            var packedPoint = PedersenHash(bytes);
+            // hint: It's definitely a Big-Endian
+            return BabyJub.UnpackPoint(packedPoint)!.Value.A.ToByteArray(true, true);
+        }
+
+        #endregion
+
         // ReSharper disable once ReturnTypeCanBeEnumerable.Global
         public static byte[] PedersenHash(byte[] msg)
         {
@@ -110,11 +157,10 @@ namespace BabyJubNet
             }
 
             var p8 = BabyJub.MulPointEscalar(p.Value, 8);
-            Console.WriteLine("{0}\t\t{1}", p8.A, p8.B);
 
             if (!BabyJub.InSubgroup(p8))
             {
-                throw new BabyJubNetException("Point not in curve");
+                throw new BabyJubNetException("Point not in curve", 1);
             }
 
             bases[pointIdx] = p8;

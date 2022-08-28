@@ -212,5 +212,42 @@ namespace BabyJubNet.Test
         }
 
         #endregion
+
+        [Fact]
+        public void NotInBabyJubCurve()
+        {
+            var rnd = new Random();
+            var h = new byte[32];
+            var validPoints = new List<(BigInteger A, BigInteger B)>();
+            while (validPoints.Count < 1000)
+            {
+                rnd.NextBytes(h);
+                var p = BabyJub.UnpackPoint(h);
+                if (p != null)
+                {
+                    validPoints.Add(p.Value);
+                }
+            }
+
+            foreach (var point in validPoints)
+            {
+                var p = (point.A + 1, point.B);
+                Assert.False(BabyJub.InSubgroup(p));
+
+                var bigBytesA = new byte[point.A.ToByteArray().Length];
+                var bigBytesB = new byte[point.B.ToByteArray().Length];
+
+                for (var i = 0; i < 100; i++)
+                {
+                    rnd.NextBytes(bigBytesA);
+                    p = (new BigInteger(bigBytesA, true, false), point.B);
+                    Assert.False(BabyJub.InSubgroup(p));
+
+                    rnd.NextBytes(bigBytesB);
+                    p = (point.A, new BigInteger(bigBytesB, true, false));
+                    Assert.False(BabyJub.InSubgroup(p));
+                }
+            }
+        }
     }
 }

@@ -5,9 +5,7 @@ namespace BabyJubNet
     public class ZQField
     {
         public readonly BigInteger q;
-
         public readonly BigInteger minusone;
-
         public readonly BigInteger nqr;
         public readonly BigInteger s;
         public readonly BigInteger t;
