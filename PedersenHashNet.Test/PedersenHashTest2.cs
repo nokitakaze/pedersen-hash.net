@@ -30,22 +30,6 @@ namespace PedersenHashNet.Test
                 .ToArray();
         }
 
-        public static bool NeedShortTest()
-        {
-            return Environment.GetCommandLineArgs()[0].Contains("OpenCover.Console.exe") || Environment
-                .GetCommandLineArgs()
-                .Skip(1)
-                .Any(x => x.ToLowerInvariant() == "--short-test");
-        }
-
-        public static bool NeedFullTest()
-        {
-            return Environment
-                .GetCommandLineArgs()
-                .Skip(1)
-                .Any(x => x.ToLowerInvariant() == "--full-test");
-        }
-
         #region Pedersen hash
 
         public static IEnumerable<object[]> GetPedersenTestCases()
@@ -54,11 +38,11 @@ namespace PedersenHashNet.Test
                 .Range(0, (int)Math.Ceiling(TornadoCommitments.Length * (1d / CaseChunkSize)))
                 .Select(chunkId => new object[] { chunkId });
 
-            if (NeedShortTest())
+            if (Util.NeedShortTest())
             {
                 q = q.Take(1);
             }
-            else if (NeedFullTest())
+            else if (Util.NeedFullTest())
             {
             }
             else
@@ -179,7 +163,8 @@ namespace PedersenHashNet.Test
         [Fact]
         public void TestGenerateCommitmentPair()
         {
-            for (var i = 0; i < 100; i++)
+            var maxCount = Util.NeedShortTest() ? 10 : 100;
+            for (var i = 0; i < maxCount; i++)
             {
                 var (secretKey, publicKey) = PedersenHashGenerator.GenerateCommitmentPair();
                 Assert.StartsWith("0x", secretKey);

@@ -14,3 +14,5 @@ obj/
 /test_case_generator/test-pedersen-hash.tsv
 /test_case_generator/test-deposit.tsv
 /test_case_generator/test-pack-unpack.tsv
+
+/PedersenHashNet.Benchmark/BenchmarkDotNet.Artifacts

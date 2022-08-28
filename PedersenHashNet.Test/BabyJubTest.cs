@@ -69,10 +69,15 @@ namespace PedersenHashNet.Test
 
         public static IEnumerable<object[]> GetEscalarTestCases()
         {
-            return Enumerable
+            var q = Enumerable
                 .Range(0, (int)Math.Ceiling(EscalarCases.Length * (1d / CaseChunkSize)))
-                .Select(chunkId => new object[] { chunkId })
-                .ToArray();
+                .Select(chunkId => new object[] { chunkId });
+            if (Util.NeedShortTest())
+            {
+                q = q.Take(5);
+            }
+
+            return q.ToArray();
         }
 
         [Theory]
@@ -105,10 +110,16 @@ namespace PedersenHashNet.Test
 
         public static IEnumerable<object[]> GetAddPointTestCases()
         {
-            return Enumerable
+            var q = Enumerable
                 .Range(0, (int)Math.Ceiling(AddPointCases.Length * (1d / CaseChunkSize)))
-                .Select(chunkId => new object[] { chunkId })
-                .ToArray();
+                .Select(chunkId => new object[] { chunkId });
+
+            if (Util.NeedShortTest())
+            {
+                q = q.Take(5);
+            }
+
+            return q.ToArray();
         }
 
         [Theory]
