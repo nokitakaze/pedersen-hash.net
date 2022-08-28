@@ -38,18 +38,32 @@ namespace PedersenHashNet.Test
                 .Any(x => x.ToLowerInvariant() == "--short-test");
         }
 
+        public static bool NeedFullTest()
+        {
+            return Environment
+                .GetCommandLineArgs()
+                .Skip(1)
+                .Any(x => x.ToLowerInvariant() == "--full-test");
+        }
+
         #region Pedersen hash
 
         public static IEnumerable<object[]> GetPedersenTestCases()
         {
             var q = Enumerable
                 .Range(0, (int)Math.Ceiling(TornadoCommitments.Length * (1d / CaseChunkSize)))
-                .Select(chunkId => new object[] { chunkId })
-                .Take(5); // todo delme
+                .Select(chunkId => new object[] { chunkId });
 
             if (NeedShortTest())
             {
-                q = q.Take(5);
+                q = q.Take(3);
+            }
+            else if (NeedFullTest())
+            {
+            }
+            else
+            {
+                q = q.Take(10);
             }
 
             return q.ToArray();
