@@ -10,7 +10,7 @@ before_build:
 
 test_script:
   - dotnet test --logger "console;verbosity=detailed"
-  - OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:test -filter:"+[NokitaKaze.PedersenHashNet*]* -[*.Test]* -[BlakeSharp*]*" -output:".\MyProject_coverage.xml" -oldstyle --short-test
+  - OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:test -filter:"+[NokitaKaze.PedersenHashNet*]* -[*.Test]* -[BlakeSharp*]*" -output:".\MyProject_coverage.xml" -oldstyle
 
 after_test:
   - codecov -f "MyProject_coverage.xml"
