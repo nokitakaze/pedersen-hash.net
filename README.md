@@ -10,10 +10,10 @@ This project is a C# implementation of [Pedersen Hash](https://docs.tornado.cash
 
 ## Public Interface
 
-* **`PedersenHashGenerator.GetHexCommitmentFromPrivatePair(string commitmentSecret): string`**  — Get hexed public commitment for hex commitment secret
-* **`PedersenHashGenerator.GetHexCommitmentFromPrivatePair(byte[] commitmentSecret): string`**  — Get hexed public commitment for byte array commitment secret
-* **`PedersenHashGenerator.GetCommitmentFromPrivatePair(string commitmentSecret): byte[]`**  — Get 32-bytes array with public commitment for hex commitment secret
-* **`PedersenHashGenerator.GetCommitmentFromPrivatePair(byte[] commitmentSecret): byte[]`**  — Get 32-bytes array with public commitment for byte array commitment secret
+* **`PedersenHashGenerator.GetHexCommitmentFromPrivatePair(string commitmentSecret): string`** — Get hexed public commitment for hex commitment secret
+* **`PedersenHashGenerator.GetHexCommitmentFromPrivatePair(byte[] commitmentSecret): string`** — Get hexed public commitment for byte array commitment secret
+* **`PedersenHashGenerator.GetCommitmentFromPrivatePair(string commitmentSecret): byte[]`** — Get 32-bytes array with public commitment for hex commitment secret
+* **`PedersenHashGenerator.GetCommitmentFromPrivatePair(byte[] commitmentSecret): byte[]`** — Get 32-bytes array with public commitment for byte array commitment secret
 
 ### Example
 Check commitment
@@ -24,12 +24,15 @@ const string expectedCommitment = "0x01cd97f5fb94b8bd45979703af68790dff36dfb13c8
 Console.WriteLine("{0}\t{1}", commitment, commitment == expectedCommitment);
 ```
 
+### Benchmark
+- [Main benchmark](docs/main-benchmark.md)
+
 ## License
 Licensed under the GPL-3.0.
 
 This software is provided **"AS IS" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied**.
 
-- BlakeSharp comes from here https://www.codeproject.com/Articles/286937/BlakeSharp-A-Csharp-Implementation-of-the-BLAKE-Ha (c) [Dominik Reichl](http://www.dominik-reichl.de/) <dominik.reichl@t-online.de>
+- BlakeSharp comes from here https://www.codeproject.com/Articles/286937/BlakeSharp-A-Csharp-Implementation-of-the-BLAKE-Ha (c) [Dominik Reichl](http://www.dominik-reichl.de/) <dominik.reichl@t-online.de>, who is also the creator of KeePass
 
 Source code was transpiled from JavaScript code:
 - [circomlib](https://github.com/iden3/circomlib) and [its tornado version](https://github.com/tornadocash/circomlib.git)

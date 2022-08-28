@@ -4,19 +4,19 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Security.Cryptography;
 
 namespace PedersenHashNet
 {
     public static class PedersenHashGenerator
     {
-        private const string GENPOINT_PREFIX = "PedersenGenerator";
-        private const int windowSize = 4;
-        private const int nWindowsPerSegment = 50;
+        public const int PublicKeyLength = 32;
+        public const int SecretKeyLength = 31 * 2;
 
-        #region Tornado commitments
+        #region Calculate tornado-cash commitments
 
         // ReSharper disable once ParameterTypeCanBeEnumerable.Local
-        private static string ToCommitmentHexWithPrefix(byte[] rawValue, int byteLength = 32)
+        private static string ToCommitmentHexWithPrefix(byte[] rawValue, int byteLength = PublicKeyLength)
         {
             var s = string.Concat(rawValue.Select(t => t.ToString("x2")));
             s = s.PadLeft(byteLength * 2, '0');
@@ -26,19 +26,19 @@ namespace PedersenHashNet
 
         public static string GetHexCommitmentFromPrivatePair(string hex)
         {
-            return ToCommitmentHexWithPrefix(GetCommitmentFromPrivatePair(hex), 32);
+            return ToCommitmentHexWithPrefix(GetCommitmentFromPrivatePair(hex), PublicKeyLength);
         }
 
         public static string GetHexCommitmentFromPrivatePair(byte[] bytes)
         {
-            return ToCommitmentHexWithPrefix(GetCommitmentFromPrivatePair(bytes), 32);
+            return ToCommitmentHexWithPrefix(GetCommitmentFromPrivatePair(bytes), PublicKeyLength);
         }
 
         // ReSharper disable once ReturnTypeCanBeEnumerable.Global
         public static byte[] GetCommitmentFromPrivatePair(string hex)
         {
             var bytes = ParseHex(hex);
-            if (bytes.Length != 31 * 2)
+            if (bytes.Length != SecretKeyLength)
             {
                 throw new PedersenHashNetException($"Private pair hex has malformed length {bytes.Length} bytes", 2);
             }
@@ -48,7 +48,7 @@ namespace PedersenHashNet
 
         public static byte[] GetCommitmentFromPrivatePair(byte[] bytes)
         {
-            if (bytes.Length != 31 * 2)
+            if (bytes.Length != SecretKeyLength)
             {
                 throw new PedersenHashNetException($"Private pair hex has malformed length {bytes.Length} bytes", 3);
             }
@@ -59,6 +59,28 @@ namespace PedersenHashNet
         }
 
         #endregion
+
+        #region Generate pair
+
+        public static (string secretKey, string publicKey) GenerateCommitmentPair()
+        {
+            using RandomNumberGenerator rng = new RNGCryptoServiceProvider();
+            byte[] secretKey = new byte[SecretKeyLength];
+            rng.GetBytes(secretKey);
+
+            var secretKeyHex = "0x" + string.Concat(secretKey.Select(t => t.ToString("x2")));
+            var publicHex = GetHexCommitmentFromPrivatePair(secretKey);
+
+            return (secretKeyHex, publicHex);
+        }
+
+        #endregion
+
+        #region Main code
+
+        private const string GENPOINT_PREFIX = "PedersenGenerator";
+        private const int windowSize = 4;
+        private const int nWindowsPerSegment = 50;
 
         // ReSharper disable once ReturnTypeCanBeEnumerable.Global
         public static byte[] PedersenHash(byte[] msg)
@@ -203,5 +225,7 @@ namespace PedersenHashNet
                 .Select(i => byte.Parse(hex.Substring(i * 2, 2), NumberStyles.HexNumber))
                 .ToArray();
         }
+
+        #endregion
     }
 }

@@ -56,7 +56,7 @@ namespace PedersenHashNet.Test
 
             if (NeedShortTest())
             {
-                q = q.Take(3);
+                q = q.Take(1);
             }
             else if (NeedFullTest())
             {
@@ -79,23 +79,24 @@ namespace PedersenHashNet.Test
                 .ToArray();
             foreach (var caseData in cases)
             {
-                var expectedCommitment = (string)caseData[0];
-                var noteKey = (string)caseData[1];
+                var expectedCommitment = EnsureHexPrefix((string)caseData[0]).ToLowerInvariant();
+                var noteKey = EnsureHexPrefix((string)caseData[1]).ToLowerInvariant();
 
+                //
                 var actualCommitment1 = PedersenHashGenerator.GetHexCommitmentFromPrivatePair(noteKey);
                 Assert.StartsWith("0x", actualCommitment1);
-                Assert.Equal(EnsureHexPrefix(expectedCommitment), actualCommitment1);
+                Assert.Equal(expectedCommitment, actualCommitment1);
                 actualCommitment1 = PedersenHashGenerator.GetHexCommitmentFromPrivatePair(noteKey[2..]);
-                Assert.Equal(EnsureHexPrefix(expectedCommitment), actualCommitment1);
+                Assert.Equal(expectedCommitment, actualCommitment1);
 
                 var noteKeyArray = PedersenHashGenerator.ParseHex(noteKey);
                 Assert.Equal(
-                    noteKey.ToLowerInvariant(),
+                    noteKey,
                     "0x" + string.Concat(noteKeyArray.Select(t => t.ToString("x2")))
                 );
                 var actualCommitment2 = PedersenHashGenerator.GetHexCommitmentFromPrivatePair(noteKeyArray);
                 Assert.StartsWith("0x", actualCommitment2);
-                Assert.Equal(EnsureHexPrefix(expectedCommitment), actualCommitment2);
+                Assert.Equal(expectedCommitment, actualCommitment2);
             }
         }
 
@@ -105,6 +106,8 @@ namespace PedersenHashNet.Test
         }
 
         #endregion
+
+        #region Malformed input
 
         [Fact]
         private static void CheckMalformedLength_Bytes()
@@ -168,5 +171,27 @@ namespace PedersenHashNet.Test
                 }
             }
         }
+
+        #endregion
+
+        #region
+
+        [Fact]
+        public void TestGenerateCommitmentPair()
+        {
+            for (var i = 0; i < 100; i++)
+            {
+                var (secretKey, publicKey) = PedersenHashGenerator.GenerateCommitmentPair();
+                Assert.StartsWith("0x", secretKey);
+                Assert.Equal(2 + 2 * PedersenHashGenerator.SecretKeyLength, secretKey.Length);
+                Assert.StartsWith("0x", publicKey);
+                Assert.Equal(2 + 2 * PedersenHashGenerator.PublicKeyLength, publicKey.Length);
+
+                var recalculatedPublic = PedersenHashGenerator.GetHexCommitmentFromPrivatePair(secretKey);
+                Assert.Equal(recalculatedPublic, publicKey);
+            }
+        }
+
+        #endregion
     }
 }

@@ -80,7 +80,7 @@ namespace PedersenHashNet.Test
 
             if (NeedShortTest())
             {
-                q = q.Take(3);
+                q = q.Take(1);
             }
             else if (NeedFullTest())
             {
