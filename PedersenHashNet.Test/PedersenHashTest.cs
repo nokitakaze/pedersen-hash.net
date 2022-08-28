@@ -56,7 +56,7 @@ namespace PedersenHashNet.Test
 
         public static bool NeedShortTest()
         {
-            return Environment
+            return Environment.GetCommandLineArgs()[0].Contains("OpenCover.Console.exe") || Environment
                 .GetCommandLineArgs()
                 .Skip(1)
                 .Any(x => x.ToLowerInvariant() == "--short-test");

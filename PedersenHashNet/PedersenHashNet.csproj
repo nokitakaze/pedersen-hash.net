@@ -3,6 +3,11 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <LangVersion>9</LangVersion>
+        <PackageVersion>0.1.0</PackageVersion>
+        <Authors>NokitaKaze</Authors>
+        <PackageLicenseExpression>GPL-3</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/nokitakaze/pedersen-hash.net</RepositoryUrl>
+        <PackageTags>pedersen pedersen-hash ZkSnark BabyJub blake256 blake512</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
