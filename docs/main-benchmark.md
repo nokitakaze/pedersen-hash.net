@@ -38,3 +38,24 @@ Intel Core i7-10875H CPU 2.30GHz, 1 CPU, 16 logical and 8 physical cores
 |       GenerateCommitmentPair |   10 |    892.86 ms |    16.607 ms |    15.534 ms |
 |       GenerateCommitmentPair |  100 |  9,237.14 ms |   152.652 ms |   135.322 ms |
 |       GenerateCommitmentPair | 1000 | 90,280.35 ms | 1,317.828 ms | 1,168.220 ms |
+
+## Windows 10 & Intel Core i7-10875H CPU 2.30GHz
+```ini
+BenchmarkDotNet=v0.13.2, OS=debian 10 (container)
+Intel Xeon CPU E31275 3.40GHz, 1 CPU, 8 logical and 4 physical cores
+.NET SDK=5.0.408
+  [Host]     : .NET 5.0.17 (5.0.1722.21314), X64 RyuJIT AVX
+  DefaultJob : .NET 5.0.17 (5.0.1722.21314), X64 RyuJIT AVX
+```
+
+|                       Method |    N |         Mean |       Error |      StdDev |       Median |
+|----------------------------- |----- |-------------:|------------:|------------:|-------------:|
+| GetCommitmentFromPrivatePair |    1 |     124.5 ms |     2.47 ms |     2.19 ms |     124.5 ms |
+| GetCommitmentFromPrivatePair |   10 |   1,219.2 ms |    21.74 ms |    20.33 ms |   1,222.9 ms |
+| GetCommitmentFromPrivatePair |  100 |  12,730.4 ms |   229.74 ms |   479.56 ms |  12,541.5 ms |
+| GetCommitmentFromPrivatePair | 1000 | 111,710.1 ms | 2,187.37 ms | 2,246.27 ms | 111,274.2 ms |
+|       GenerateCommitmentPair |    1 |     115.9 ms |     2.29 ms |     5.71 ms |     116.8 ms |
+|       GenerateCommitmentPair |   10 |   1,159.8 ms |    23.17 ms |    49.87 ms |   1,158.6 ms |
+|       GenerateCommitmentPair |  100 |  11,275.7 ms |   212.09 ms |   177.10 ms |  11,271.5 ms |
+|       GenerateCommitmentPair | 1000 | 118,765.5 ms | 2,297.21 ms | 2,256.17 ms | 118,622.2 ms |
+

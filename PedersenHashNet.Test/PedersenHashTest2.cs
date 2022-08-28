@@ -8,7 +8,7 @@ namespace PedersenHashNet.Test
 {
     public class PedersenHashTest2
     {
-        private const int CaseChunkSize = 100;
+        private const int CaseChunkSize = 20;
         private static readonly object[][] TornadoCommitments;
 
         static PedersenHashTest2()
@@ -47,7 +47,7 @@ namespace PedersenHashNet.Test
             }
             else
             {
-                q = q.Take(10);
+                q = q.Take(50);
             }
 
             return q.ToArray();
