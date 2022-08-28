@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-namespace BabyJubNet
+namespace PedersenHashNet
 {
     public static class PedersenHashGenerator
     {
@@ -40,7 +40,7 @@ namespace BabyJubNet
             var bytes = ParseHex(hex);
             if (bytes.Length != 31 * 2)
             {
-                throw new BabyJubNetException($"Private pair hex has malformed length {bytes.Length} bytes", 2);
+                throw new PedersenHashNetException($"Private pair hex has malformed length {bytes.Length} bytes", 2);
             }
 
             return GetCommitmentFromPrivatePair(bytes);
@@ -50,7 +50,7 @@ namespace BabyJubNet
         {
             if (bytes.Length != 31 * 2)
             {
-                throw new BabyJubNetException($"Private pair hex has malformed length {bytes.Length} bytes", 3);
+                throw new PedersenHashNetException($"Private pair hex has malformed length {bytes.Length} bytes", 3);
             }
 
             var packedPoint = PedersenHash(bytes);
@@ -160,7 +160,7 @@ namespace BabyJubNet
 
             if (!BabyJub.InSubgroup(p8))
             {
-                throw new BabyJubNetException("Point not in curve", 1);
+                throw new PedersenHashNetException("Point not in curve", 1);
             }
 
             bases[pointIdx] = p8;

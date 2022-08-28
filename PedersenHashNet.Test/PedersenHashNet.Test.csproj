@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BabyJubNet\BabyJubNet.csproj" />
+      <ProjectReference Include="..\PedersenHashNet\PedersenHashNet.csproj" />
     </ItemGroup>
 
     <ItemGroup>

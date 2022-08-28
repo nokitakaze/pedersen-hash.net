@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Xunit;
 
-namespace BabyJubNet.Test
+namespace PedersenHashNet.Test
 {
     public class PedersenHashTest2
     {
@@ -108,7 +108,7 @@ namespace BabyJubNet.Test
                     PedersenHashGenerator.GetCommitmentFromPrivatePair(bytes);
                     Assert.Fail("GetCommitmentFromPrivatePair didn't raise the exception");
                 }
-                catch (BabyJubNetException e)
+                catch (PedersenHashNetException e)
                 {
                     Assert.NotEqual(0, e.ErrorCode);
                     Assert.NotEqual(1, e.ErrorCode);
@@ -136,7 +136,7 @@ namespace BabyJubNet.Test
                     PedersenHashGenerator.GetCommitmentFromPrivatePair(hex);
                     Assert.Fail("GetCommitmentFromPrivatePair didn't raise the exception");
                 }
-                catch (BabyJubNetException e)
+                catch (PedersenHashNetException e)
                 {
                     Assert.NotEqual(0, e.ErrorCode);
                     Assert.NotEqual(1, e.ErrorCode);
@@ -147,7 +147,7 @@ namespace BabyJubNet.Test
                     PedersenHashGenerator.GetCommitmentFromPrivatePair("0x" + hex);
                     Assert.Fail("GetCommitmentFromPrivatePair didn't raise the exception");
                 }
-                catch (BabyJubNetException e)
+                catch (PedersenHashNetException e)
                 {
                     Assert.NotEqual(0, e.ErrorCode);
                     Assert.NotEqual(1, e.ErrorCode);

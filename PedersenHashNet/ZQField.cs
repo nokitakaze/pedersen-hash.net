@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace BabyJubNet
+namespace PedersenHashNet
 {
     public class ZQField
     {

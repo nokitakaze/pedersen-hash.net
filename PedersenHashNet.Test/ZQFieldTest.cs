@@ -1,20 +1,20 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using Xunit;
 
-namespace BabyJubNet.Test
+namespace PedersenHashNet.Test
 {
-    public class BigIntegerBabyJubExtensionTest
+    public class ZQFieldTest
     {
         private const int CaseChunkSize = 100;
         private static readonly BigInteger[][] Cases;
 
-        static BigIntegerBabyJubExtensionTest()
+        static ZQFieldTest()
         {
-            var lines = File.ReadAllLines("data/test-affine-inverse.tsv");
+            var lines = File.ReadAllLines("data/test-f1.tsv");
             Cases = lines
                 .Select(line => line.Split().Select(BigInteger.Parse).ToArray())
                 .ToArray();
@@ -38,17 +38,24 @@ namespace BabyJubNet.Test
                 .ToArray();
             foreach (var caseData in cases)
             {
-                var num1 = caseData[0];
-                var num2 = caseData[1];
-                var affineExpected = caseData[2];
-                var inverseExpected = caseData[3];
+                var q = caseData[0];
+                var nqr = caseData[2];
+                var t = caseData[3];
+                var nqr_to_t = caseData[4];
 
-                var affineActual = num1.Affine(num2);
-                var inverseActual = num1.Inverse(num2);
-
-                Assert.Equal(affineExpected, affineActual);
-                Assert.Equal(inverseExpected, inverseActual);
+                var field = new ZQField(q);
+                Assert.Equal(nqr, field.nqr);
+                Assert.Equal(t, field.t);
+                Assert.Equal(nqr_to_t, field.nqr_to_t);
             }
+        }
+
+        [Fact]
+        public void SqrtZero()
+        {
+            var sqrt = BN128.F1.Sqrt(BigInteger.Zero);
+            Assert.NotNull(sqrt);
+            Assert.True(sqrt.Value.IsZero);
         }
     }
 }

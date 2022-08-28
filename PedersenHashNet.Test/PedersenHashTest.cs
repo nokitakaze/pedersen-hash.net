@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using Xunit;
 
-namespace BabyJubNet.Test
+namespace PedersenHashNet.Test
 {
     public class PedersenHashTest
     {

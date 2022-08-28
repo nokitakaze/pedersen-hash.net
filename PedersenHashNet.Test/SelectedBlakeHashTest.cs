@@ -6,7 +6,7 @@ using System.Text;
 using BlakeSharp;
 using Xunit;
 
-namespace BabyJubNet.Test
+namespace PedersenHashNet.Test
 {
     public class SelectedBlakeHashTest
     {
