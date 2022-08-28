@@ -18,7 +18,7 @@
 using System;
 using System.Security.Cryptography;
 
-namespace BlakeSharp
+namespace PedersenHashNet.BlakeSharp
 {
     public sealed class Blake512 : HashAlgorithm
     {
