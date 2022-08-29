@@ -137,5 +137,21 @@ namespace PedersenHashNet.Test
         }
 
         #endregion
+
+        [Fact]
+        public void CheckParseSemiMalformedHex()
+        {
+            var a1 = PedersenHashGenerator.ParseHex("0x123");
+            var b1 = new BigInteger(a1, true, true);
+            Assert.Equal(0x0123, (int)b1);
+
+            var a2 = PedersenHashGenerator.ParseHex("0x0123");
+            var b2 = new BigInteger(a2, true, true);
+            Assert.Equal(0x0123, (int)b2);
+
+            var a3 = PedersenHashGenerator.ParseHex("123");
+            var b3 = new BigInteger(a3, true, true);
+            Assert.Equal(0x0123, (int)b3);
+        }
     }
 }

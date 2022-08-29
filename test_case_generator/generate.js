@@ -30,14 +30,25 @@ function padLeftZeros(idx, n) {
 
 {
     const numbers = [];
-    for (let i = 0; i < 100; i++) {
-        const number = Math.floor(Math.random() * 1_000_000_000);
+    for (let number of [0, 1, 2, 10]) {
+        numbers.push(bigInt(number));
+        if (number !== 0) {
+            numbers.push(bigInt(-number));
+        }
+    }
+    const already_add = numbers.length;
+    for (let i = 0; i < 100 - already_add; i++) {
+        const number = Math.floor(Math.random() * 1_000_000_000) - 500_000_000;
         numbers.push(bigInt(number));
     }
 
     let InverseText = '';
     for (let num1 of numbers) {
         for (let num2 of numbers) {
+            if (num2.toString() === "0") {
+                continue;
+            }
+
             const affine = num1.affine(num2);
             const inverse = num1.inverse(num2);
 

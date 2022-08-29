@@ -20,7 +20,7 @@ namespace PedersenHashNet.Test
                 .ToArray();
         }
 
-        public static IEnumerable<object[]> GetMainTestCases()
+        public static IEnumerable<object[]> GetAffineInverseTestCases()
         {
             return Enumerable
                 .Range(0, (int)Math.Ceiling(Cases.Length * (1d / CaseChunkSize)))
@@ -29,8 +29,8 @@ namespace PedersenHashNet.Test
         }
 
         [Theory]
-        [MemberData(nameof(GetMainTestCases))]
-        public void MainTestCase(int chunkId)
+        [MemberData(nameof(GetAffineInverseTestCases))]
+        public void AffineInverseTestCase(int chunkId)
         {
             var cases = Cases
                 .Skip(chunkId * CaseChunkSize)
@@ -48,6 +48,34 @@ namespace PedersenHashNet.Test
 
                 Assert.Equal(affineExpected, affineActual);
                 Assert.Equal(inverseExpected, inverseActual);
+            }
+        }
+
+        [Fact]
+        public void AffineZero()
+        {
+            try
+            {
+                BigInteger.One.Affine(BigInteger.Zero);
+                Assert.Fail("Affine with zero didn't raise an exception");
+            }
+            catch (System.DivideByZeroException)
+            {
+                // Goooooood!
+            }
+        }
+
+        [Fact]
+        public void InverseZero()
+        {
+            try
+            {
+                BigInteger.One.Inverse(BigInteger.Zero);
+                Assert.Fail("Affine with zero didn't raise an exception");
+            }
+            catch (System.DivideByZeroException)
+            {
+                // Goooooood!
             }
         }
     }

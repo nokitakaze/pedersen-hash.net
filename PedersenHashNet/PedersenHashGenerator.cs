@@ -88,7 +88,7 @@ namespace PedersenHashNet
             const int bitsPerSegment = windowSize * nWindowsPerSegment;
             var bits = Buffer2bits(msg);
 
-            var nSegments = (int)Math.Floor((bits.Length - 1) * 1d / (windowSize * nWindowsPerSegment)) + 1;
+            var nSegments = (int)Math.Floor((bits.Length - 1) * 1d / bitsPerSegment) + 1;
 
             var accP = (BigInteger.Zero, BigInteger.One);
 
@@ -121,6 +121,7 @@ namespace PedersenHashNet
                         o++;
                     }
 
+                    // hint: max(o) = 3, min(bits.Length) = 8, so it's an always true condition
                     if (o < bits.Length)
                     {
                         if (bits[o])
