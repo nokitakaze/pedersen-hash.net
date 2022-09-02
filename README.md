@@ -32,8 +32,6 @@ Licensed under the GPL-3.0.
 
 This software is provided **"AS IS" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied**.
 
-- BlakeSharp comes from here https://www.codeproject.com/Articles/286937/BlakeSharp-A-Csharp-Implementation-of-the-BLAKE-Ha (c) [Dominik Reichl](http://www.dominik-reichl.de/) <dominik.reichl@t-online.de>, who is also the creator of KeePass
-
 Source code was transpiled from JavaScript code:
 - [circomlib](https://github.com/iden3/circomlib) and [its tornado version](https://github.com/tornadocash/circomlib.git)
 - [SnarkJS](https://github.com/iden3/snarkjs) and [its tornado version](https://github.com/tornadocash/snarkjs.git)
