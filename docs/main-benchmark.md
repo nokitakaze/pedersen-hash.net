@@ -1,5 +1,5 @@
 # Main benchmark
-## Windows 10 & AMD Ryzen 9 3900X BOX 3.8 GHz (Matisse) 
+## AMD Ryzen 9 3900X BOX 3.8 GHz (Matisse) & Windows 10 
 ```ini
 BenchmarkDotNet=v0.13.2, OS=Windows 10 (10.0.19044.1826/21H2/November2021Update)
 AMD Ryzen 9 3900X, 1 CPU, 24 logical and 12 physical cores
@@ -19,7 +19,7 @@ AMD Ryzen 9 3900X, 1 CPU, 24 logical and 12 physical cores
 |       GenerateCommitmentPair |  100 |  6,458.38 ms | 106.725 ms |  94.609 ms |
 |       GenerateCommitmentPair | 1000 | 68,144.39 ms | 278.706 ms | 260.702 ms |
 
-## Windows 10 & Intel Core i7-10875H CPU 2.30GHz
+## Intel Core i7-10875H CPU 2.30GHz & Windows 10
 ```ini
 BenchmarkDotNet=v0.13.2, OS=Windows 10 (10.0.19043.1826/21H1/May2021Update)
 Intel Core i7-10875H CPU 2.30GHz, 1 CPU, 16 logical and 8 physical cores
@@ -39,7 +39,7 @@ Intel Core i7-10875H CPU 2.30GHz, 1 CPU, 16 logical and 8 physical cores
 |       GenerateCommitmentPair |  100 |  9,237.14 ms |   152.652 ms |   135.322 ms |
 |       GenerateCommitmentPair | 1000 | 90,280.35 ms | 1,317.828 ms | 1,168.220 ms |
 
-## Windows 10 & Intel Core i7-10875H CPU 2.30GHz
+## Intel Xeon CPU E31275 3.40GHz & Debian (inside docker)
 ```ini
 BenchmarkDotNet=v0.13.2, OS=debian 10 (container)
 Intel Xeon CPU E31275 3.40GHz, 1 CPU, 8 logical and 4 physical cores
