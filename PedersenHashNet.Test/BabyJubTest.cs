@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Text;
-using PedersenHashNet.BlakeSharp;
 using Xunit;
 
 namespace PedersenHashNet.Test
@@ -188,7 +187,7 @@ namespace PedersenHashNet.Test
                     );
                     var sByte = Encoding.ASCII.GetBytes(S);
 
-                    using var hashAlgorithm = new Blake256();
+                    using var hashAlgorithm = new BlakeSharpNG.Blake256();
                     hashAlgorithm.Initialize();
                     hashAlgorithm.ComputeHash(sByte);
                     var h1 = hashAlgorithm.Hash;

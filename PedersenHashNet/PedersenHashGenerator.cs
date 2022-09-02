@@ -169,7 +169,7 @@ namespace PedersenHashNet
                 );
                 var sByte = Encoding.ASCII.GetBytes(S);
 
-                using var hashAlgorithm = new BlakeSharp.Blake256();
+                using var hashAlgorithm = new BlakeSharpNG.Blake256();
                 hashAlgorithm.Initialize();
                 hashAlgorithm.ComputeHash(sByte);
                 var h = hashAlgorithm.Hash;

@@ -10,4 +10,8 @@
         <PackageTags>pedersen pedersen-hash ZkSnark BabyJub blake256 blake512</PackageTags>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="BlakeSharpNG" Version="0.1.0" />
+    </ItemGroup>
+
 </Project>

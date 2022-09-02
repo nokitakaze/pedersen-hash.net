@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using PedersenHashNet.BlakeSharp;
 using Xunit;
 
 namespace PedersenHashNet.Test
@@ -56,7 +55,7 @@ namespace PedersenHashNet.Test
 
                 var sByte = Encoding.ASCII.GetBytes(S);
 
-                using var hashAlgorithm = new Blake256();
+                using var hashAlgorithm = new BlakeSharpNG.Blake256();
                 hashAlgorithm.Initialize();
                 var h1 = hashAlgorithm.ComputeHash(sByte);
                 h1![31] &= 0xBF;
