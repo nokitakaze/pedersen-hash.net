@@ -10,14 +10,14 @@ AMD Ryzen 9 3900X, 1 CPU, 24 logical and 12 physical cores
 
 |                       Method |    N |         Mean |      Error |     StdDev |
 |----------------------------- |----- |-------------:|-----------:|-----------:|
-| GetCommitmentFromPrivatePair |    1 |     64.24 ms |   1.200 ms |   1.064 ms |
-| GetCommitmentFromPrivatePair |   10 |    611.45 ms |   9.704 ms |   8.602 ms |
-| GetCommitmentFromPrivatePair |  100 |  7,478.48 ms |  38.358 ms |  32.030 ms |
-| GetCommitmentFromPrivatePair | 1000 | 60,940.80 ms | 233.081 ms | 218.024 ms |
-|       GenerateCommitmentPair |    1 |     67.22 ms |   1.324 ms |   2.765 ms |
-|       GenerateCommitmentPair |   10 |    693.40 ms |  13.386 ms |  17.870 ms |
-|       GenerateCommitmentPair |  100 |  6,458.38 ms | 106.725 ms |  94.609 ms |
-|       GenerateCommitmentPair | 1000 | 68,144.39 ms | 278.706 ms | 260.702 ms |
+| GetCommitmentFromPrivatePair |    1 |     77.49 ms |   0.529 ms |   0.469 ms |
+| GetCommitmentFromPrivatePair |   10 |    764.99 ms |   3.432 ms |   3.210 ms |
+| GetCommitmentFromPrivatePair |  100 |  6,460.13 ms |  72.036 ms |  67.382 ms |
+| GetCommitmentFromPrivatePair | 1000 | 63,971.08 ms | 258.563 ms | 241.860 ms |
+|       GenerateCommitmentPair |    1 |     67.95 ms |   1.306 ms |   1.554 ms |
+|       GenerateCommitmentPair |   10 |    689.75 ms |  13.683 ms |  20.895 ms |
+|       GenerateCommitmentPair |  100 |  6,788.44 ms | 116.647 ms | 103.404 ms |
+|       GenerateCommitmentPair | 1000 | 68,562.88 ms | 319.980 ms | 299.310 ms |
 
 ## Intel Core i7-10875H CPU 2.30GHz & Windows 10
 ```ini
@@ -28,16 +28,16 @@ Intel Core i7-10875H CPU 2.30GHz, 1 CPU, 16 logical and 8 physical cores
   DefaultJob : .NET 5.0.17 (5.0.1722.21314), X64 RyuJIT AVX2
 ```
 
-|                       Method |    N |         Mean |        Error |       StdDev |
-|----------------------------- |----- |-------------:|-------------:|-------------:|
-| GetCommitmentFromPrivatePair |    1 |    100.48 ms |     1.810 ms |     2.653 ms |
-| GetCommitmentFromPrivatePair |   10 |    996.01 ms |     9.927 ms |     8.800 ms |
-| GetCommitmentFromPrivatePair |  100 |  8,219.46 ms |   157.308 ms |   174.848 ms |
-| GetCommitmentFromPrivatePair | 1000 | 98,831.24 ms | 1,563.567 ms | 1,462.562 ms |
-|       GenerateCommitmentPair |    1 |     94.15 ms |     1.878 ms |     4.712 ms |
-|       GenerateCommitmentPair |   10 |    892.86 ms |    16.607 ms |    15.534 ms |
-|       GenerateCommitmentPair |  100 |  9,237.14 ms |   152.652 ms |   135.322 ms |
-|       GenerateCommitmentPair | 1000 | 90,280.35 ms | 1,317.828 ms | 1,168.220 ms |
+|                       Method |    N |         Mean |        Error |     StdDev |
+|----------------------------- |----- |-------------:|-------------:|-----------:|
+| GetCommitmentFromPrivatePair |    1 |     79.27 ms |     1.041 ms |   0.869 ms |
+| GetCommitmentFromPrivatePair |   10 |    752.55 ms |     5.443 ms |   4.825 ms |
+| GetCommitmentFromPrivatePair |  100 |  9,060.01 ms |    97.546 ms |  86.472 ms |
+| GetCommitmentFromPrivatePair | 1000 | 76,733.19 ms |   886.448 ms | 829.184 ms |
+|       GenerateCommitmentPair |    1 |     84.78 ms |     1.684 ms |   3.835 ms |
+|       GenerateCommitmentPair |   10 |    858.05 ms |    17.147 ms |  32.207 ms |
+|       GenerateCommitmentPair |  100 |  8,370.93 ms |   135.643 ms | 113.268 ms |
+|       GenerateCommitmentPair | 1000 | 83,231.92 ms | 1,046.009 ms | 873.465 ms |
 
 ## Intel Xeon CPU E31275 3.40GHz & Debian (inside docker)
 ```ini
@@ -58,4 +58,3 @@ Intel Xeon CPU E31275 3.40GHz, 1 CPU, 8 logical and 4 physical cores
 |       GenerateCommitmentPair |   10 |   1,159.8 ms |    23.17 ms |    49.87 ms |   1,158.6 ms |
 |       GenerateCommitmentPair |  100 |  11,275.7 ms |   212.09 ms |   177.10 ms |  11,271.5 ms |
 |       GenerateCommitmentPair | 1000 | 118,765.5 ms | 2,297.21 ms | 2,256.17 ms | 118,622.2 ms |
-
