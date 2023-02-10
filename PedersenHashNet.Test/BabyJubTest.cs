@@ -144,6 +144,13 @@ namespace PedersenHashNet.Test
 
                 Assert.Equal(point3ExpectedA, point3Actual.A);
                 Assert.Equal(point3ExpectedB, point3Actual.B);
+
+                // Check for Commutative property
+                // https://en.wikipedia.org/wiki/Commutative_property
+                var point3ActualAlt = BabyJub.AddPoint((point2a, point2b), (point1a, point1b));
+
+                Assert.Equal(point3ExpectedA, point3ActualAlt.A);
+                Assert.Equal(point3ExpectedB, point3ActualAlt.B);
             }
         }
 
