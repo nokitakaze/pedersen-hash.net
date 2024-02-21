@@ -4,13 +4,32 @@ using System.Numerics;
 
 namespace PedersenHashNet
 {
+    /// <summary>
+    /// BabyJub Curve
+    /// </summary>
+    /// <remarks>
+    /// https://docs.zkbob.com/implementation/elliptic-curve-cryptography
+    /// https://eips.ethereum.org/EIPS/eip-2494
+    /// </remarks>
     public static class BabyJub
     {
         public static readonly BigInteger p = BN128.r;
+
+        /// <summary>
+        /// BabyJub: Coefficient a
+        /// </summary>
         public static readonly BigInteger CTA = 168700;
+
+        /// <summary>
+        /// BabyJub: Coefficient d
+        /// </summary>
         public static readonly BigInteger D = 168696;
 
+        /// <summary>
+        /// BabyJub: Order
+        /// </summary>
         public static readonly BigInteger order =
+            // 0x30644e72e131a029b85045b68181585d59f76dc1c90770533b94bee1c9093788
             BigInteger.Parse("21888242871839275222246405745257275088614511777268538073601725287587578984328");
 
         public static readonly BigInteger subOrder = order >> 3;
