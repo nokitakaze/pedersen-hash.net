@@ -40,7 +40,7 @@ namespace PedersenHashNet
             var bytes = ParseHex(hex);
             if (bytes.Length != SecretKeyLength)
             {
-                throw new PedersenHashNetException($"Private pair hex has malformed length {bytes.Length} bytes", 2);
+                throw new PedersenHashNetException($"Private pair hex has a malformed length of {bytes.Length} bytes", 2);
             }
 
             return GetCommitmentFromPrivatePair(bytes);
@@ -50,7 +50,7 @@ namespace PedersenHashNet
         {
             if (bytes.Length != SecretKeyLength)
             {
-                throw new PedersenHashNetException($"Private pair hex has malformed length {bytes.Length} bytes", 3);
+                throw new PedersenHashNetException($"Private pair hex has a malformed length of {bytes.Length} bytes", 3);
             }
 
             var packedPoint = PedersenHash(bytes);
@@ -153,9 +153,9 @@ namespace PedersenHashNet
 
         public static (BigInteger A, BigInteger B) GetBasePoint(int pointIdx)
         {
-            if (bases.ContainsKey(pointIdx))
+            if (bases.TryGetValue(pointIdx, out var point))
             {
-                return bases[pointIdx];
+                return point;
             }
 
             (BigInteger a, BigInteger b)? p = null;
@@ -183,7 +183,7 @@ namespace PedersenHashNet
 
             if (!BabyJub.InSubgroup(p8))
             {
-                throw new PedersenHashNetException("Point not in curve", 1);
+                throw new PedersenHashNetException("Point is not on the curve", 1);
             }
 
             bases[pointIdx] = p8;

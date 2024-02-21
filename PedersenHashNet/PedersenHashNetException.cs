@@ -7,7 +7,7 @@ namespace PedersenHashNet
         // ReSharper disable once NotAccessedField.Global
         public readonly int ErrorCode;
 
-        public PedersenHashNetException(string errorMsg, int errorCode = 1) : base(errorMsg)
+        public PedersenHashNetException(string errorMsg, int errorCode = -1) : base(errorMsg)
         {
             ErrorCode = errorCode;
         }

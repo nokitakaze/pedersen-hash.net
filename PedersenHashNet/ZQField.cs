@@ -2,6 +2,7 @@
 
 namespace PedersenHashNet
 {
+    /// The ZQField class represents a field over the integers modulo q, where q is a prime number.
     public class ZQField
     {
         public readonly BigInteger q;
